@@ -1,0 +1,137 @@
+#include <stdio.h>
+#include <string.h>
+
+void generatePlayfairMatrix(char key[], char playfairMatrix[5][5]) {
+    int i, j, k, flag = 0, *p;
+
+    // Remove repeated characters from the key
+    for (i = 0; i < strlen(key); i++) {
+        if (key[i] == 'j') {
+            key[i] = 'i';
+        }
+        for (j = i + 1; j < strlen(key); j++) {
+            if (key[j] == key[i]) {
+                for (k = j; k < strlen(key); k++) {
+                    key[k] = key[k + 1];
+                }
+            }
+        }
+    }
+
+    // Fill the playfair matrix with the key
+    p = &flag;
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 5; j++) {
+            if (*p < strlen(key)) {
+                playfairMatrix[i][j] = key[*p];
+                (*p)++;
+            } else {
+                playfairMatrix[i][j] = 'a' + flag;
+                flag++;
+            }
+        }
+    }
+}
+
+void encryptPlayfair(char plaintext[], char key[], char ciphertext[]) {
+    char playfairMatrix[5][5];
+    int i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, len, flag = 0;
+
+    // Generate the playfair matrix
+    generatePlayfairMatrix(key, playfairMatrix);
+
+    // Remove spaces from the plaintext
+    for (i = 0; i < strlen(plaintext); i++) {
+        if (plaintext[i] == ' ') {
+            for (j = i; j < strlen(plaintext); j++) {
+                plaintext[j] = plaintext[j + 1];
+            }
+        }
+    }
+
+    // Add a dummy character if the plaintext has an odd length
+    if (strlen(plaintext) % 2 != 0) {
+        plaintext[strlen(plaintext)] = 'x';
+        plaintext[strlen(plaintext) + 1] = '\0';
+    }
+
+    // Encrypt the plaintext
+    len = strlen(plaintext);
+    for (i = 0; i < len; i += 2) {
+        j = 0;
+        k = 0;
+        l = 0;
+        m = 0;
+        n = 0;
+        o = 0;
+        p = 0;
+        q = 0;
+        r = 0;
+        s = 0;
+        t = 0;
+        u = 0;
+        v = 0;
+        w = 0;
+        x = 0;
+        y = 0;
+        z = 0;
+        for (j = 0; j < 5; j++) {
+            for (k = 0; k < 5; k++) {
+                if (playfairMatrix[j][k] == plaintext[i]) {
+                    l = j;
+                    m = k;
+                }
+                if (playfairMatrix[j][k] == plaintext[i + 1]) {
+                    n = j;
+                    o = k;
+                }
+            }
+        }
+        if (l == n) {
+            if (m == 4) {
+                p = 0;
+            } else {
+                p = m + 1;
+            }
+            if (o == 4) {
+                q = 0;
+            } else {
+                q = o + 1;
+            }
+            ciphertext[i] = playfairMatrix[l][p];
+            ciphertext[i + 1] = playfairMatrix[n][q];
+        } else if (m == o) {
+            if (l == 4) {
+                r = 0;
+            } else {
+                r = l + 1;
+            }
+            if (n == 4) {
+                s = 0;
+            } else {
+                s = n + 1;
+            }
+            ciphertext[i] = playfairMatrix[r][m];
+            ciphertext[i + 1] = playfairMatrix[s][o];
+        } else {
+            ciphertext[i] = playfairMatrix[l][o];
+            ciphertext[i + 1] = playfairMatrix[n][m];
+        }
+    }
+}
+
+int main() {
+    char plaintext[100], key[100], ciphertext[100];
+    printf("Enter the plaintext: ");
+    fgets(plaintext, 100, stdin);
+    printf("Enter the key: ");
+    fgets(key, 100, stdin);
+    encryptPlayfair(plaintext, key, ciphertext);
+    
+return 0;
+}
+OUTPUT :
+Enter the plaintext: the way you passed away
+Enter the key: 34
+57
+dash: 2: 57: found
